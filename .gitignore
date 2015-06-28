@@ -1,0 +1,6 @@
+*~
+*.o
+*.swp
+config.mk
+notify
+tags

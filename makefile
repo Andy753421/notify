@@ -10,8 +10,9 @@ LDFLAGS   += -lpthread
 
 # Add Plan 9 Flags
 P9PFLAGS  += -I$(PLAN9)/include
-LDFLAGS   += -L$(PLAN9)/lib -lplumb -l9pclient -lmux -lthread -l9
-srv.o: CPPFLAGS += $(P9PFLAGS)
+LDFLAGS   += -L$(PLAN9)/lib -lplumb -l9pclient -lmux -lthread -lbio -l9
+client.o: CPPFLAGS += $(P9PFLAGS)
+server.o: CPPFLAGS += $(P9PFLAGS)
 
 # Add GTK Flags
 PACKAGES  += gtk+-3.0
@@ -26,9 +27,10 @@ clean:
 	rm -f notify *.o
 
 # Rules
-notify: main.o gui.o srv.o
-	$(GCC) $(CFLAGS) -o $@ $+ $(LDFLAGS)
+notify: main.o client.o server.o gui.o text.o
+	@echo LD $@
+	@$(GCC) $(CFLAGS) -o $@ $+ $(LDFLAGS)
 
 %.o: %.c $(wildcard *.h) makefile
-	$(GCC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
-
+	@echo CC $@
+	@$(GCC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
